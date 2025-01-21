@@ -1,0 +1,58 @@
+pipeline {
+    agent {
+        label 'docker-node'  // Specify the agent with Docker installed (make sure this label matches the node label in Jenkins).
+    }
+
+    environment {
+        DOCKER_COMPOSE_FILE = "docker-compose.yaml"  // Define environment variable for the Docker Compose file location (not really needed in this case unless used later).
+    }
+
+    stages {
+        // Checkout Stage: Get the code from the repository.
+        stage("Checkout") {
+            steps {
+                echo "Checking out the code..."  // Display a message to indicate this stage.
+                checkout scm  // Checkout the code from the repository defined in the Jenkins job configuration.
+            }
+        }
+
+        // Build Stage: Build Docker images using docker-compose.
+        stage("Building") {
+            steps {
+                echo "Building Docker images..."  // Display a message to indicate this stage.
+                sh "docker-compose build"  // Use Docker Compose to build images as per the definitions in the docker-compose.yaml.
+            }
+        }
+
+        // Test Stage: Run tests in the backend service.
+        stage("Testing") {
+            steps {
+                echo "Running tests..."  // Display a message to indicate this stage.
+                sh "cd mern/backend && npm install && npm run tests"  // Navigate to the backend, install dependencies, and run tests.
+            }
+        }
+
+        // Deploy Stage: Deploy the application using Docker Compose.
+        stage("Deploying") {
+            steps {
+                echo "Deploying application..."  // Display a message to indicate this stage.
+                sh "docker-compose down"  // Stop and remove containers, networks, and volumes from any previous runs (to avoid conflicts).
+                sh "docker-compose up -d"  // Start containers in detached mode (in the background).
+            }
+        }
+    }
+
+    // Post Actions: Clean up resources and log success/failure.
+    post {
+        always {
+            echo "Cleaning up Docker resources..."  // Display a message to indicate this step.
+            sh "docker system prune -f || true"  // Clean up unused Docker images, containers, volumes, and networks. '|| true' ensures the pipeline doesn't fail even if pruning fails.
+        }
+        success {
+            echo "Pipeline executed successfully!"  // Log success message if the pipeline completes successfully.
+        }
+        failure {
+            echo "Pipeline failed. Check the logs for details."  // Log failure message if the pipeline fails.
+        }
+    }
+}

@@ -50,3 +50,6 @@ docker build -t mern-backend .
 
 
 
+
+
+kind create cluster --image kindest/node:v1.29.10@sha256:3b2d8c31753e6c8069d4fc4517264cd20e86fd36220671fb7d0a5855103aa84b --name Ommie K8
