@@ -48,3 +48,13 @@ docker build -t mern-backend .
 
 <img width="956" alt="image" src="https://github.com/user-attachments/assets/fd173548-eac0-4b02-bd6b-2763a022447e" />
 
+
+## Explanation of Porject
+
+### **Project: Three-Tier Web Application Using Docker**  
+- Built a **three-tier architecture** with **React (frontend), Express.js (backend), and MongoDB (database)**.  
+- **Containerized** each component using **Dockerfiles** and managed them with **Docker Compose**.  
+- Created a **Docker network** for **secure communication** between containers.  
+- Ensured **MongoDB data persistence** using **Docker volumes**.  
+- Used **Docker Compose** to automate deployment and container orchestration.  
+- Overcame **networking issues** by using **service names instead of localhost**.  
